@@ -1,0 +1,731 @@
+'module
+Imports System.Data.OleDb
+
+
+Module Module1
+
+    Public cn As New OleDbConnection("Provider=Microsoft.ACE.OLEDB.12.0;Data Source=C:\Users\lenovo\Documents\School_Management_System\My_School_Management_System.accdb")
+End Module
+'form 1
+
+Public Class Form1
+
+    Private Sub Timer1_Tick(ByVal sender As System.Object, ByVal e As System.EventArgs) Handles Timer1.Tick
+        Timer1.Stop()
+        Form2.Show()
+        Me.Hide()
+        AllowTransparency = True
+    End Sub
+
+    Private Sub Form1_Load(ByVal sender As System.Object, ByVal e As System.EventArgs) Handles MyBase.Load
+        Timer1.Start()
+        Me.Show()
+        Me.Refresh()
+        System.Threading.Thread.Sleep(2000)
+        AllowTransparency = False
+
+    End Sub
+End Class
+
+'Form2
+
+Imports System.Data.OleDb
+
+
+Public Class Form2
+
+    Private Sub Button1_Click(ByVal sender As System.Object, ByVal e As System.EventArgs) Handles Button1.Click
+        If TextBox1.Text = "" Then
+            MsgBox("Please Enter Your  Username ", MsgBoxStyle.Critical)
+            TextBox1.Focus()
+        ElseIf TextBox2.Text = "" Then
+            MsgBox("Please Enter Your Password ", MsgBoxStyle.Critical)
+
+        Else
+            cn.Open()
+            Dim rs As String
+            rs = "select * from Login where Username = '" & TextBox1.Text & "' "
+            Dim cmd As New OleDbCommand(rs, cn)
+            Dim rd As OleDbDataReader
+            rd = cmd.ExecuteReader
+            If rd.Read() Then
+                If TextBox2.Text = rd(2) Then
+                    MsgBox(" Login Successfull")
+                    TextBox1.Text = ""
+                    TextBox2.Text = ""
+                    Form3.Show()
+                    Me.Hide()
+
+                Else
+                    MsgBox(" Please Enter Correct Password ", MsgBoxStyle.Critical)
+                End If
+
+            End If
+        End If
+        cn.Close()
+
+    End Sub
+
+    Private Sub LinkLabel1_LinkClicked(ByVal sender As System.Object, ByVal e As System.Windows.Forms.LinkLabelLinkClickedEventArgs) Handles LinkLabel1.LinkClicked
+        Form8.Show()
+
+    End Sub
+
+    Private Sub Form2_Load(sender As System.Object, e As System.EventArgs) Handles MyBase.Load
+
+    End Sub
+End Class
+'Form3
+Public Class Form3
+
+    Private Sub Button1_Click(ByVal sender As System.Object, ByVal e As System.EventArgs) Handles Button1.Click
+        Form4.Show()
+
+    End Sub
+
+    Private Sub Button2_Click(ByVal sender As System.Object, ByVal e As System.EventArgs) Handles Button2.Click
+        Me.Hide()
+        Form6.Show()
+    End Sub
+
+    Private Sub Button4_Click(ByVal sender As System.Object, ByVal e As System.EventArgs) Handles Button4.Click
+        Form2.Show()
+        Me.Hide()
+
+    End Sub
+
+    Private Sub Form3_Load(sender As System.Object, e As System.EventArgs) Handles MyBase.Load
+
+    End Sub
+End Class
+'form4
+Imports System.Data.OleDb
+
+Imports System.IO
+
+
+Public Class Form4
+
+    Private Sub Form4_Load(ByVal sender As System.Object, ByVal e As System.EventArgs) Handles MyBase.Load
+        TabControl1.Appearance = TabAppearance.FlatButtons
+        TabControl1.ItemSize = New Size(0, 1)
+        TabControl1.SizeMode = TabSizeMode.Fixed
+
+
+        Auto_Reg_id()
+    End Sub
+    Private Sub Button2_Click(ByVal sender As System.Object, ByVal e As System.EventArgs)
+        TabControl1.SelectTab(2)
+    End Sub
+
+    Private Sub Button1_Click(ByVal sender As System.Object, ByVal e As System.EventArgs)
+        TabControl1.SelectTab(1)
+
+    End Sub
+
+    Private Sub Button3_Click(ByVal sender As System.Object, ByVal e As System.EventArgs)
+        TabControl1.SelectTab(3)
+    End Sub
+
+    Private Sub Button4_Click(ByVal sender As System.Object, ByVal e As System.EventArgs)
+        TabControl1.SelectTab(4)
+    End Sub
+
+
+    Private Sub Button1_Click_1(ByVal sender As System.Object, ByVal e As System.EventArgs) Handles Button1.Click
+        TabControl1.SelectedTab = TabPage2
+    End Sub
+
+    Private Sub Button6_Click(ByVal sender As System.Object, ByVal e As System.EventArgs) Handles Button6.Click
+
+        Dim ag As New FileStream(OpenFileDialog1.FileName, FileMode.Open, FileAccess.Read)
+        Dim bread As New BinaryReader(ag)
+        Dim buffer(ag.Length) As Byte
+        ag.Read(buffer, 0, ag.Length)
+        ag.Close()
+
+
+        If TextBox3.Text = "" Then
+            MsgBox("Please enter your lastname ")
+        ElseIf TextBox4.Text = "" Then
+            MsgBox("please enter First name ")
+        ElseIf TextBox5.Text = "" Then
+            MsgBox("please enter middel name")
+        ElseIf TextBox6.Text = "" Then
+            MsgBox("please enter mother name")
+        ElseIf TextBox7.Text = "" Then
+            MsgBox("please enter place of birth")
+        ElseIf TextBox8.Text = "" Then
+            MsgBox("please enter Aadhar number")
+        ElseIf TextBox9.Text = "" Then
+            MsgBox("please enter religion")
+        ElseIf TextBox10.Text = "" Then
+            MsgBox("please enter middel name")
+        ElseIf TextBox11.Text = "" Then
+            MsgBox("please enter previous school name")
+        ElseIf TextBox12.Text = "" Then
+            MsgBox("please enter academic year")
+        ElseIf ComboBox1.Text = "" Then
+            MsgBox("please select your gender")
+        ElseIf ComboBox2.Text = "" Then
+            MsgBox("please select caste")
+        ElseIf ComboBox3.Text = "" Then
+            MsgBox("please select class")
+        Else
+
+            cn.Open()
+            Dim rs As String
+            rs = "insert into Student values(" & TextBox1.Text & "," & TextBox2.Text & ",'" & TextBox3.Text & "','" & TextBox4.Text & "','" & TextBox5.Text & "','" & ComboBox2.Text & "','" & TextBox6.Text & "','" & DateTimePicker1.Value & "','" & TextBox7.Text & "','" & TextBox8.Text & "','" & TextBox9.Text & "','" & ComboBox1.Text & "','" & TextBox10.Text & "','" & TextBox11.Text & "','" & ComboBox3.Text & "','" & TextBox12.Text & "',@i,'" & DateTimePicker2.Value & "')"
+            Dim cmd As New OleDbCommand(rs, cn)
+            cmd.Parameters.AddWithValue("@i", buffer)
+            cmd.ExecuteNonQuery()
+
+            MsgBox("Addmission Successfull")
+
+            TextBox2.Text = " "
+            TextBox3.Text = " "
+            TextBox4.Text = " "
+            TextBox5.Text = " "
+            TextBox6.Text = " "
+            TextBox7.Text = " "
+            TextBox8.Text = " "
+            TextBox10.Text = " "
+            TextBox9.Text = " "
+            TextBox11.Text = " "
+            TextBox12.Text = " "
+            ComboBox1.Text = " "
+            ComboBox2.Text = " "
+            ComboBox3.Text = " "
+            PictureBox2.Image = Nothing
+            cn.Close()
+            Auto_Reg_id()
+        End If
+    End Sub
+
+    Private Sub Button7_Click(ByVal sender As System.Object, ByVal e As System.EventArgs) Handles Button7.Click
+        Me.Hide()
+        Form3.Show()
+    End Sub
+
+    Private Sub Button8_Click(ByVal sender As System.Object, ByVal e As System.EventArgs) Handles Button8.Click
+
+        TextBox2.Clear()
+        TextBox3.Clear()
+        TextBox4.Clear()
+        TextBox5.Clear()
+        TextBox6.Clear()
+        TextBox7.Clear()
+        TextBox8.Clear()
+        TextBox9.Clear()
+        TextBox10.Clear()
+        TextBox11.Clear()
+        TextBox12.Clear()
+        ComboBox1.Text = ""
+        ComboBox2.Text = ""
+        ComboBox3.Text = ""
+        DateTimePicker1.Text = ""
+        Auto_Reg_id()
+
+        Me.Refresh()
+
+    End Sub
+
+
+    Private Sub Button9_Click(ByVal sender As System.Object, ByVal e As System.EventArgs) Handles Button9.Click
+        OpenFileDialog1.ShowDialog()
+        PictureBox2.Image = Image.FromFile(OpenFileDialog1.FileName)
+        PictureBox2.SizeMode = PictureBoxSizeMode.StretchImage
+
+    End Sub
+
+    Private Sub Button5_Click_1(ByVal sender As System.Object, ByVal e As System.EventArgs) Handles Button5.Click
+        cn.Open()
+        Dim rs As String
+        rs = "select*from Student where Reg_id = " & TextBox1.Text & ""
+        Dim cmd As New OleDbCommand(rs, cn)
+        Dim rd As OleDbDataReader
+        rd = cmd.ExecuteReader
+        If rd.Read() Then
+            TextBox1.Text = rd(0)
+            TextBox3.Text = rd(2)
+            TextBox4.Text = rd(3)
+            TextBox5.Text = rd(4)
+            ComboBox2.Text = rd(5)
+            TextBox6.Text = rd(6)
+            DateTimePicker1.Value = rd(7)
+            TextBox7.Text = rd(8)
+            TextBox8.Text = rd(9)
+            TextBox9.Text = rd(10)
+            ComboBox1.Text = rd(11)
+            TextBox10.Text = rd(12)
+            TextBox11.Text = rd(13)
+            ComboBox3.Text = rd(14)
+            TextBox12.Text = rd(15)
+            PictureBox2.Image = Image.FromStream(New IO.MemoryStream(CType(rd(16), Byte())))
+
+
+            TextBox2.Enabled = False
+            TextBox11.Enabled = False
+            TextBox12.Enabled = False
+            TextBox7.Enabled = False
+            TextBox8.Enabled = False
+            TextBox9.Enabled = False
+
+            ComboBox1.Enabled = False
+            ComboBox2.Enabled = False
+            ComboBox3.Enabled = False
+
+
+        End If
+        PictureBox2.SizeMode = PictureBoxSizeMode.StretchImage
+        cn.Close()
+
+
+    End Sub
+
+    Private Sub Button3_Click_2(ByVal sender As System.Object, ByVal e As System.EventArgs) Handles Button3.Click
+        cn.Open()
+        Dim rs As String
+
+        rs = " update Student set Lname='" & TextBox3.Text & "', Fname='" & TextBox4.Text & "',Mname='" & TextBox5.Text & "',Mother='" & TextBox6.Text & "',DOB='" & DateTimePicker1.Value & "', POB='" & TextBox7.Text & "', Address='" & TextBox10.Text & "' where Reg_id=" & TextBox1.Text & ""
+
+        Dim cmd As New OleDbCommand(rs, cn)
+
+        cmd.ExecuteNonQuery()
+
+        MsgBox("Student Data Updated")
+
+
+        TextBox2.Text = " "
+        TextBox3.Text = " "
+        TextBox4.Text = " "
+        TextBox5.Text = " "
+        TextBox6.Text = " "
+        TextBox7.Text = " "
+        TextBox8.Text = " "
+        TextBox10.Text = " "
+        TextBox9.Text = " "
+        TextBox11.Text = " "
+
+        TextBox12.Text = " "
+
+        ComboBox1.Text = " "
+        ComboBox2.Text = " "
+        ComboBox3.Text = " "
+        PictureBox2.Image = Nothing
+        TextBox1.Enabled = True
+
+        TextBox2.Enabled = True
+
+        TextBox11.Enabled = True
+
+        TextBox12.Enabled = True
+
+        TextBox7.Enabled = True
+
+        TextBox8.Enabled = True
+        TextBox9.Enabled = True
+
+        ComboBox1.Enabled = True
+        ComboBox2.Enabled = True
+        ComboBox3.Enabled = True
+
+        cn.Close()
+        Auto_Reg_id()
+
+    End Sub
+    Public Sub Auto_Reg_id()
+        cn.Open()
+        Dim rs As String
+        rs = " select max(Reg_id) from Student"
+        Dim cmd As New OleDbCommand(rs, cn)
+        Dim rd As OleDbDataReader
+        rd = cmd.ExecuteReader()
+        If rd.read Then
+            If rd.IsDBNull(0) Then
+                TextBox1.Text = "1001"
+            Else
+                TextBox1.Text = rd(0) + 1
+                TextBox1.Text = " "
+                TextBox2.Text = " "
+                TextBox3.Text = " "
+                TextBox4.Text = " "
+                TextBox5.Text = " "
+                TextBox6.Text = " "
+                TextBox7.Text = " "
+                TextBox8.Text = " "
+                TextBox10.Text = " "
+                TextBox9.Text = " "
+                TextBox11.Text = " "
+
+                TextBox12.Text = " "
+
+                ComboBox1.Text = " "
+                ComboBox2.Text = " "
+                ComboBox3.Text = " "
+                PictureBox2.Image = Nothing
+
+
+
+            End If
+
+        End If
+        cn.Close()
+
+    End Sub
+
+    Private Sub Button4_Click_2(ByVal sender As System.Object, ByVal e As System.EventArgs) Handles Button4.Click
+        cn.Open()
+        Dim rs As String
+        rs = " delete from Student where Enrol=" & TextBox1.Text & " "
+        Dim cmd As New OleDbCommand(rs, cn)
+        cmd.ExecuteNonQuery()
+        MsgBox("Record Deleted")
+        cn.Close()
+        TextBox1.Text = " "
+        TextBox2.Text = " "
+        TextBox3.Text = " "
+        TextBox4.Text = " "
+        TextBox5.Text = " "
+        TextBox6.Text = " "
+        TextBox7.Text = " "
+        TextBox8.Text = " "
+        TextBox10.Text = " "
+        TextBox9.Text = " "
+        TextBox11.Text = " "
+
+        TextBox12.Text = " "
+
+        ComboBox1.Text = " "
+        ComboBox2.Text = " "
+        ComboBox3.Text = " "
+        PictureBox2.Image = Nothing
+        cn.Close()
+
+    End Sub
+
+    Private Sub Button2_Click_2(ByVal sender As System.Object, ByVal e As System.EventArgs) Handles Button2.Click
+        Form5.Show()
+
+    End Sub
+End Class
+'form5
+Imports System.Data.OleDb
+
+Public Class Form5
+
+    Private Sub TabPage1_Click(ByVal sender As System.Object, ByVal e As System.EventArgs) Handles TabPage1.Click
+
+    End Sub
+
+    Private Sub Button3_Click(ByVal sender As System.Object, ByVal e As System.EventArgs) Handles Button3.Click
+        TabControl1.SelectTab(1)
+    End Sub
+    Private Sub Form5_Load(ByVal sender As System.Object, ByVal e As System.EventArgs) Handles MyBase.Load
+        TabControl1.Appearance = TabAppearance.FlatButtons
+        TabControl1.ItemSize = New Size(0, 1)
+        TabControl1.SizeMode = TabSizeMode.Fixed
+    End Sub
+
+    Private Sub Button5_Click(ByVal sender As System.Object, ByVal e As System.EventArgs) Handles Button5.Click
+        cn.Open()
+        Dim rs As String
+        rs = " select * from Student where Reg_id = " & TextBox1.Text & " "
+        Dim cmd As New OleDbCommand(rs, cn)
+        Dim rd As OleDbDataReader
+        rd = cmd.ExecuteReader
+        If rd.Read Then
+            TextBox2.Text = rd(1)
+
+        End If
+        cn.Close()
+
+    End Sub
+
+    Private Sub Button4_Click(ByVal sender As System.Object, ByVal e As System.EventArgs) Handles Button4.Click
+
+        Dim crt As New CrystalReport1
+        crt.Load("C:\Users\lenovo\Pictures\.netphotos\School Management System 1\School Management System 1\CrystalReport1.rpt")
+        Form7.CrystalReportViewer1.ReportSource = crt
+        Form7.CrystalReportViewer1.SelectionFormula = "{Student.Reg_id}= " & TextBox1.Text & ""
+        Form7.CrystalReportViewer1.SelectionFormula = "{T_C_Details.Reg_id}= " & TextBox1.Text & ""
+
+        Form7.Show()
+    End Sub
+    Public Sub Cristel()
+      
+
+    End Sub
+
+
+    Private Sub Button6_Click(ByVal sender As System.Object, ByVal e As System.EventArgs) Handles Button6.Click
+        cn.Open()
+        Dim rs As String
+        rs = " insert into  T_C_Details values (" & TextBox1.Text & "," & TextBox2.Text & ",'" & TextBox3.Text & "','" & ComboBox3.Text & "','" & TextBox4.Text & "','" & DateTimePicker1.Value & "')"
+        Dim cmd As New OleDbCommand(rs, cn)
+        cmd.ExecuteNonQuery()
+        MsgBox("Now Can Generate TC ")
+
+        cn.Close()
+    End Sub
+
+    Private Sub Button1_Click(ByVal sender As System.Object, ByVal e As System.EventArgs) Handles Button1.Click
+        Me.Close()
+        Form4.Show()
+    End Sub
+End Class
+'form6
+Imports System.Data.OleDb
+Imports System.IO
+Public Class Form6
+
+    Private Sub Form6_Load(ByVal sender As System.Object, ByVal e As System.EventArgs) Handles MyBase.Load
+        Regid()
+        TabControl1.Appearance = TabAppearance.FlatButtons
+        TabControl1.ItemSize = New Size(0, 1)
+        TabControl1.SizeMode = TabSizeMode.Fixed
+    End Sub
+
+    Private Sub Button6_Click(ByVal sender As System.Object, ByVal e As System.EventArgs) Handles Button6.Click
+        Dim ag As New FileStream(OpenFileDialog1.FileName, FileMode.Open, FileAccess.Read)
+        Dim bread As New BinaryReader(ag)
+        Dim buffer(ag.Length) As Byte
+        ag.Read(buffer, 0, ag.Length)
+        ag.Close()
+
+        cn.Open()
+        Dim rs As String
+        rs = " insert into Teacher values ('" & TextBox1.Text & "','" & TextBox2.Text & "','" & TextBox3.Text & "','" & TextBox4.Text & "','" & ComboBox1.Text & "','" & ComboBox2.Text & "','" & DateTimePicker1.Value & "','" & TextBox5.Text & "'," & TextBox6.Text & ",'" & ComboBox3.Text & "','" & ComboBox4.Text & "','" & TextBox7.Text & "','" & TextBox8.Text & "','" & DateTimePicker1.Value & "',@p )"
+        Dim cmd As New OleDbCommand(rs, cn)
+        cmd.Parameters.AddWithValue("@p", Buffer)
+        cmd.ExecuteNonQuery()
+
+
+        MsgBox("Details Added Successfull")
+
+        TextBox1.Text = " "
+        TextBox2.Text = " "
+        TextBox3.Text = " "
+        TextBox4.Text = " "
+        TextBox5.Text = " "
+        TextBox6.Text = " "
+        TextBox7.Text = " "
+        TextBox8.Text = " "
+        ComboBox1.Text = " "
+        ComboBox2.Text = " "
+        ComboBox3.Text = " "
+        ComboBox4.Text = " "
+        PictureBox2.Image = Nothing
+        cn.Close()
+        Regid()
+    End Sub
+
+    Private Sub Button1_Click(ByVal sender As System.Object, ByVal e As System.EventArgs) Handles Button1.Click
+        TabControl1.SelectTab(1)
+    End Sub
+
+    Private Sub Button7_Click(ByVal sender As System.Object, ByVal e As System.EventArgs) Handles Button7.Click
+        Me.Hide()
+        Form3.Show()
+    End Sub
+
+    Private Sub Button9_Click(ByVal sender As System.Object, ByVal e As System.EventArgs) Handles Button9.Click
+        OpenFileDialog1.ShowDialog()
+        PictureBox2.Image = Image.FromFile(OpenFileDialog1.FileName)
+        PictureBox2.SizeMode = PictureBoxSizeMode.StretchImage
+    End Sub
+
+    Private Sub Button2_Click(ByVal sender As System.Object, ByVal e As System.EventArgs) Handles Button2.Click
+
+        cn.Open()
+        Dim rs As String
+        rs = "select * from Teacher where Reg_id=" & TextBox1.Text & ""
+        Dim cmd As New OleDbCommand(rs, cn)
+        Dim rd As OleDbDataReader
+        rd = cmd.ExecuteReader
+        If rd.Read Then
+
+            TextBox2.Text = rd(1)
+            TextBox3.Text = rd(2)
+            TextBox4.Text = rd(3)
+            TextBox5.Text = rd(7)
+            ComboBox1.Text = rd(4)
+            ComboBox2.Text = rd(5)
+            TextBox6.Text = rd(8)
+            DateTimePicker1.Value = rd(6)
+            DateTimePicker2.Value = rd(13)
+            TextBox7.Text = rd(11)
+            TextBox8.Text = rd(12)
+
+            ComboBox4.Text = rd(10)
+
+            ComboBox3.Text = rd(9)
+
+            PictureBox2.Image = Image.FromStream(New IO.MemoryStream(CType(rd(14), Byte())))
+
+
+            DateTimePicker1.Enabled = False
+            DateTimePicker2.Enabled = False
+
+            TextBox6.Enabled = False
+            TextBox8.Enabled = False
+
+            ComboBox1.Enabled = False
+            ComboBox2.Enabled = False
+
+
+
+        End If
+        PictureBox2.SizeMode = PictureBoxSizeMode.StretchImage
+        cn.Close()
+
+    End Sub
+
+    Private Sub Button8_Click(ByVal sender As System.Object, ByVal e As System.EventArgs) Handles Button8.Click
+        TextBox2.Clear()
+        TextBox3.Clear()
+        TextBox4.Clear()
+        TextBox5.Clear()
+        TextBox6.Clear()
+        TextBox7.Clear()
+        TextBox8.Clear()
+        ComboBox1.Text = ""
+        ComboBox2.Text = ""
+        ComboBox3.Text = ""
+        ComboBox4.Text = ""
+        DateTimePicker1.Text = ""
+        DateTimePicker2.Text = ""
+        PictureBox2.Image = Nothing
+        Regid()
+    End Sub
+
+    Private Sub Button3_Click(ByVal sender As System.Object, ByVal e As System.EventArgs) Handles Button3.Click
+        cn.Open()
+        Dim rs As String
+
+        rs = "update Teacher set L_name = '" & TextBox2.Text & "', F_name = '" & TextBox3.Text & "' , M_name = '" & TextBox4.Text & "' , Email = '" & TextBox5.Text & "' , C_t_teach = '" & ComboBox3.Text & "' , C_teacher = '" & ComboBox4.Text & "' , Address = '" & TextBox7.Text & "' where Reg_id = " & TextBox1.Text & " "
+        Dim cmd As New OleDbCommand(rs, cn)
+
+        cmd.ExecuteNonQuery()
+
+        MsgBox("Teacher  Data Updated")
+
+        TextBox1.Text = " "
+        TextBox2.Text = " "
+        TextBox3.Text = " "
+        TextBox4.Text = " "
+        TextBox5.Text = " "
+        TextBox6.Text = " "
+        TextBox7.Text = " "
+        TextBox8.Text = " "
+        ComboBox1.Text = " "
+        ComboBox2.Text = " "
+        ComboBox3.Text = " "
+        ComboBox4.Text = " "
+        PictureBox2.Image = Nothing
+
+
+        DateTimePicker1.Enabled = False
+        DateTimePicker2.Enabled = False
+
+        TextBox6.Enabled = False
+        TextBox8.Enabled = False
+
+        ComboBox1.Enabled = False
+        ComboBox2.Enabled = False
+
+        cn.Close()
+        Regid()
+    End Sub
+
+    Private Sub Button4_Click(ByVal sender As System.Object, ByVal e As System.EventArgs) Handles Button4.Click
+        cn.Open()
+        Dim rs As String
+        rs = " delete from Teacher where Reg_id=" & TextBox1.Text & " "
+        Dim cmd As New OleDbCommand(rs, cn)
+        cmd.ExecuteNonQuery()
+        MsgBox("Record Deleted")
+        cn.Close()
+        TextBox1.Text = " "
+        TextBox2.Text = " "
+        TextBox3.Text = " "
+        TextBox4.Text = " "
+        TextBox5.Text = " "
+        TextBox6.Text = " "
+        TextBox7.Text = " "
+        TextBox8.Text = " "
+
+        ComboBox4.Text = " "
+        ComboBox1.Text = " "
+        ComboBox2.Text = " "
+        ComboBox3.Text = " "
+        PictureBox2.Image = Nothing
+        cn.Close()
+
+    End Sub
+    Public Sub Regid()
+        cn.Open()
+        Dim rs As String
+        rs = " select max(Reg_id) from Teacher"
+        Dim cmd As New OleDbCommand(rs, cn)
+        Dim rd As OleDbDataReader
+        rd = cmd.ExecuteReader()
+        If rd.Read Then
+            If rd.IsDBNull(0) Then
+                TextBox1.Text = "1001"
+            Else
+                TextBox1.Text = rd(0) + 1
+                TextBox1.Text = " "
+                TextBox2.Text = " "
+                TextBox3.Text = " "
+                TextBox4.Text = " "
+                TextBox5.Text = " "
+                TextBox6.Text = " "
+                TextBox7.Text = " "
+                TextBox8.Text = " "
+
+                ComboBox1.Text = " "
+                ComboBox2.Text = " "
+                ComboBox3.Text = " "
+                PictureBox2.Image = Nothing
+
+            End If
+
+        End If
+        cn.Close()
+    End Sub
+End Class
+'form8
+Imports System.Data.OleDb
+
+Public Class Form8
+
+    Private Sub Button1_Click(ByVal sender As System.Object, ByVal e As System.EventArgs) Handles Button1.Click
+        If TextBox3.Text = TextBox4.Text Then
+            cn.Open()
+            Dim rs As String
+            rs = "insert into login values ( '" & TextBox1.Text & "','" & TextBox2.Text & "','" & TextBox3.Text & "','" & TextBox4.Text & "') "
+            Dim cmd As New OleDbCommand(rs, cn)
+            cmd.ExecuteNonQuery()
+            MsgBox(" Account Created ")
+            TextBox1.Text = ""
+            TextBox2.Text = ""
+            TextBox3.Text = ""
+            TextBox4.Text = ""
+            Form2.Show()
+            Me.Hide()
+
+        Else
+            MsgBox(" Please Insert Correct Password ")
+            TextBox4.Focus()
+
+        End If
+        cn.Close()
+    End Sub
+
+    Private Sub Form8_Load(ByVal sender As System.Object, ByVal e As System.EventArgs) Handles MyBase.Load
+
+    End Sub
+End Class
+
+
